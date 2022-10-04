@@ -24,6 +24,21 @@ team_t team = {
  * Your different versions of the rotate kernel go here
  ******************************************************/
 
+char loop_unrolling_rotate_descr[] = "loop_unrolling_rotate: Loop unrolling on top of the naive approach";
+void loop_unrolling_rotate(int dim, pixel *src, pixel *dst) {
+
+    int i, j;
+
+    for (i = 0; i < dim; i++)
+	for (j = 0; j < dim; j++) {
+
+	    dst[RIDX(dim-1-j, i, dim)] = src[RIDX(i, j, dim)];
+	    dst[RIDX(dim-1-j-1, i, dim)] = src[RIDX(i-1, j, dim)];
+	    dst[RIDX(dim-1-j-2, i, dim)] = src[RIDX(i-2, j, dim)];
+	    dst[RIDX(dim-1-j-3, i, dim)] = src[RIDX(i-3, j, dim)];
+    }
+}
+
 /* 
  * naive_rotate - The naive baseline version of rotate 
  */
@@ -44,7 +59,7 @@ void naive_rotate(int dim, pixel *src, pixel *dst)
 char rotate_descr[] = "rotate: Current working version";
 void rotate(int dim, pixel *src, pixel *dst) 
 {
-    naive_rotate(dim, src, dst);
+    loop_unrolling_rotate(dim, src, dst);
 }
 
 /*********************************************************************
