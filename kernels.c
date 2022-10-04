@@ -10,7 +10,7 @@
  * Please fill in the following team struct 
  */
 team_t team = {
-    "ArneProductions",              /* Team name */
+    "ANTI",              /* Team name */
 
     "Andreas Nicolaj Tietgen", 
     "anti@itu.dk", 
