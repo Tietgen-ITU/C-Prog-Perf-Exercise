@@ -27,15 +27,32 @@ team_t team = {
 char loop_unrolling_rotate_descr[] = "loop_unrolling_rotate: Loop unrolling on top of the naive approach";
 void loop_unrolling_rotate(int dim, pixel *src, pixel *dst) {
 
+    // TODO: Check the math with a small sample size on paper before running the tester to see the performance gain
+
+    // Setup variables and bucket sizes
     int i, j;
+    int bucket_size = 6;
+    int bucket_loop_count = dim / bucket_size;
+    int entries_left = dim % bucket_size;
 
-    for (i = 0; i < dim; i++)
-	for (j = 0; j < dim; j++) {
-
-	    dst[RIDX(dim-1-j, i, dim)] = src[RIDX(i, j, dim)];
-	    dst[RIDX(dim-1-j-1, i, dim)] = src[RIDX(i-1, j, dim)];
-	    dst[RIDX(dim-1-j-2, i, dim)] = src[RIDX(i-2, j, dim)];
-	    dst[RIDX(dim-1-j-3, i, dim)] = src[RIDX(i-3, j, dim)];
+    // Loop for each row
+    for (i = 0; i < dim; i++) {
+	
+        // Loop for each cell with loop unrolling
+        int j = 0;
+        while (bucket_loop_count > j)
+        {
+	        dst[RIDX(dim-1-j, i, dim)] = src[RIDX(i, j, dim)];
+	        dst[RIDX(dim-1-j-1, i, dim)] = src[RIDX(i-1, j, dim)];
+	        dst[RIDX(dim-1-j-2, i, dim)] = src[RIDX(i-2, j, dim)];
+	        dst[RIDX(dim-1-j-3, i, dim)] = src[RIDX(i-3, j, dim)];
+	        dst[RIDX(dim-1-j-4, i, dim)] = src[RIDX(i-3, j, dim)];
+	        dst[RIDX(dim-1-j-5, i, dim)] = src[RIDX(i-3, j, dim)];
+        }
+        
+        // Run the remaining entries in the row
+        for(int j = 0; j < entries_left; j++)
+	        dst[RIDX(dim-1-j, i, dim)] = src[RIDX(i, j, dim)];
     }
 }
 
@@ -72,6 +89,7 @@ void rotate(int dim, pixel *src, pixel *dst)
 
 void register_rotate_functions() 
 {
+    add_rotate_function(&loop_unrolling_rotate, loop_unrolling_rotate_descr);
     add_rotate_function(&naive_rotate, naive_rotate_descr);   
     add_rotate_function(&rotate, rotate_descr);   
     /* ... Register additional test functions here */
