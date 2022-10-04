@@ -43,11 +43,11 @@ void loop_unrolling_rotate(int dim, pixel *src, pixel *dst) {
         while (bucket_loop_count > j)
         {
 	        dst[RIDX(dim-1-j, i, dim)] = src[RIDX(i, j, dim)];
-	        dst[RIDX(dim-1-j-1, i, dim)] = src[RIDX(i, j-1, dim)];
-	        dst[RIDX(dim-1-j-2, i, dim)] = src[RIDX(i, j-2, dim)];
-	        dst[RIDX(dim-1-j-3, i, dim)] = src[RIDX(i, j-3, dim)];
-	        dst[RIDX(dim-1-j-4, i, dim)] = src[RIDX(i, j-4, dim)];
-	        dst[RIDX(dim-1-j-5, i, dim)] = src[RIDX(i, j-5, dim)];
+	        dst[RIDX(dim-1-j-1, i, dim)] = src[RIDX(i, j+1, dim)];
+	        dst[RIDX(dim-1-j-2, i, dim)] = src[RIDX(i, j+2, dim)];
+	        dst[RIDX(dim-1-j-3, i, dim)] = src[RIDX(i, j+3, dim)];
+	        dst[RIDX(dim-1-j-4, i, dim)] = src[RIDX(i, j+4, dim)];
+	        dst[RIDX(dim-1-j-5, i, dim)] = src[RIDX(i, j+5, dim)];
         }
         
         // Run the remaining entries in the row
