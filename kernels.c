@@ -27,7 +27,6 @@ team_t team = {
 char loop_unrolling_rotate_descr[] = "loop_unrolling_rotate: Loop unrolling on top of the naive approach";
 void loop_unrolling_rotate(int dim, pixel *src, pixel *dst) {
 
-    // TODO: Check the math with a small sample size on paper before running the tester to see the performance gain
 
     // Setup variables and bucket sizes
     int i, j;
@@ -35,6 +34,7 @@ void loop_unrolling_rotate(int dim, pixel *src, pixel *dst) {
     int bucket_loop_count = dim / bucket_size;
     int entries_left = dim % bucket_size;
 
+    // TODO: Make loop unrolling on rows too
     // Loop for each row
     for (i = 0; i < dim; i++) {
 	
