@@ -27,6 +27,160 @@ team_t team = {
  * Your different versions of the rotate kernel go here
  ******************************************************/
 
+
+/* 
+ * naive_rotate - The naive baseline version of rotate 
+ */
+char basic_rotate_descr[] = "basic_rotate: using basic optimizations to improve performance";
+void basic_rotate(int dim, pixel *src, pixel *dst) 
+{
+    int i, j;
+    int bucket_size = 32; // TODO: IS this the correct bucket size that we use in the code?
+    int ni = bucket_size - 1;
+    int si = 0; // This is the index that is flipped 90 degrees
+
+    for (i = 0; i < dim; i += 32) {
+
+    	for (j = 0; j < dim; j++) {
+
+            // int strange_idx = (dim-1-j)*i+dim;
+            // int normal_idx = i*j+dim;
+
+	        dst[si] = src[ni];
+            ni--;
+            si += bucket_size;
+
+	        dst[si] = src[ni];
+            ni--;
+            si += bucket_size;
+            
+	        dst[si] = src[ni];
+            ni--;
+            si += bucket_size;
+
+	        dst[si] = src[ni];
+            ni--;
+            si += bucket_size;
+
+	        dst[si] = src[ni];
+            ni--;
+            si += bucket_size;
+
+	        dst[si] = src[ni];
+            ni--;
+            si += bucket_size;
+
+	        dst[si] = src[ni];
+            ni--;
+            si += bucket_size;
+
+	        dst[si] = src[ni];
+            ni--;
+            si += bucket_size;
+
+	        dst[si] = src[ni];
+            ni--;
+            si += bucket_size;
+
+	        dst[si] = src[ni];
+            ni--;
+            si += bucket_size;
+
+	        dst[si] = src[ni];
+            ni--;
+            si += bucket_size;
+
+	        dst[si] = src[ni];
+            ni--;
+            si += bucket_size;
+
+	        dst[si] = src[ni];
+            ni--;
+            si += bucket_size;
+
+	        dst[si] = src[ni];
+            ni--;
+            si += bucket_size;
+
+	        dst[si] = src[ni];
+            ni--;
+            si += bucket_size;
+
+	        dst[si] = src[ni];
+            ni--;
+            si += bucket_size;
+
+	        dst[si] = src[ni];
+            ni--;
+            si += bucket_size;
+
+	        dst[si] = src[ni];
+            ni--;
+            si += bucket_size;
+
+	        dst[si] = src[ni];
+            ni--;
+            si += bucket_size;
+
+	        dst[si] = src[ni];
+            ni--;
+            si += bucket_size;
+
+	        dst[si] = src[ni];
+            ni--;
+            si += bucket_size;
+            
+	        dst[si] = src[ni];
+            ni--;
+            si += bucket_size;
+
+	        dst[si] = src[ni];
+            ni--;
+            si += bucket_size;
+
+	        dst[si] = src[ni];
+            ni--;
+            si += bucket_size;
+
+	        dst[si] = src[ni];
+            ni--;
+            si += bucket_size;
+
+	        dst[si] = src[ni];
+            ni--;
+            si += bucket_size;
+
+	        dst[si] = src[ni];
+            ni--;
+            si += bucket_size;
+
+	        dst[si] = src[ni];
+            ni--;
+            si += bucket_size;
+
+	        dst[si] = src[ni];
+            ni--;
+            si += bucket_size;
+
+	        dst[si] = src[ni];
+            ni--;
+            si += bucket_size;
+            
+	        dst[si] = src[ni];
+            ni--;
+            si += bucket_size;
+
+	        dst[si] = src[ni];
+            // ni--;
+            // si += bucket_size;
+
+            // Reset values for next iteration
+            ni += 64; // Set to next end
+            si -= 992; // Set to the beginning again
+            si++;
+        }
+    }
+}
 /* 
  * naive_rotate - The naive baseline version of rotate 
  */
@@ -47,7 +201,7 @@ void naive_rotate(int dim, pixel *src, pixel *dst)
 char rotate_descr[] = "rotate: Current working version";
 void rotate(int dim, pixel *src, pixel *dst) 
 {
-    naive_rotate(dim, src, dst);
+    basic_rotate(dim, src, dst);
 }
 
 /*********************************************************************
@@ -60,6 +214,7 @@ void rotate(int dim, pixel *src, pixel *dst)
 
 void register_rotate_functions() 
 {
+    // add_rotate_function(&basic_rotate, basic_rotate_descr);
     add_rotate_function(&naive_rotate, naive_rotate_descr);   
     add_rotate_function(&rotate, rotate_descr);   
     /* ... Register additional test functions here */
