@@ -10,10 +10,13 @@
  * Please fill in the following team struct 
  */
 team_t team = {
-    "ANTI",              /* Team name */
+    "anti",              /* Team name */
 
-    "Andreas Nicolaj Tietgen", 
-    "anti@itu.dk", 
+    "Andreas Nicolaj Tietgen",     /* First member full name */
+    "anti@itu.dk",  /* First member email address */
+
+    "",                   /* Second member full name (leave blank if none) */
+    ""                    /* Second member email addr (leave blank if none) */
 };
 
 /***************
@@ -33,8 +36,8 @@ void naive_rotate(int dim, pixel *src, pixel *dst)
     int i, j;
 
     for (i = 0; i < dim; i++)
-	for (j = 0; j < dim; j++)
-	    dst[RIDX(dim-1-j, i, dim)] = src[RIDX(i, j, dim)];
+    	for (j = 0; j < dim; j++)
+	        dst[RIDX(dim-1-j, i, dim)] = src[RIDX(i, j, dim)];
 }
 
 /* 
