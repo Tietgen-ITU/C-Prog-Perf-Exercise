@@ -486,21 +486,56 @@ void naive_smooth(int dim, pixel *src, pixel *dst)
  */
 static pixel avg_basic(int dim, int i, int j, pixel *src) 
 {
-    int ii, jj, red_acc = 0, green_acc = 0, blue_acc = 0, count = 0;
+    int ii, red_acc = 0, green_acc = 0, blue_acc = 0, count = 0;
     pixel current_pixel;
 
-    int min_row_idx = min(i+1, dim-1);
-    int min_col_idx = min(j+1, dim-1);
+    int max_row_idx = min(i+1, dim-1);
+    int max_col_idx = min(j+1, dim-1);
+    int min_row_idx = max(i-1, 0);
+    int min_col_idx = max(j-1, 0); 
+    // int row_diff = max_row_idx - min_row_idx;
+    int col_diff = max_col_idx - min_col_idx;
 
-    for(ii = max(i-1, 0); ii <= min_row_idx; ii++) 
-	    for(jj = max(j-1, 0); jj <= min_col_idx; jj++) {
+    int idx = RIDX(min_row_idx, min_col_idx, dim);
+    pixel *p = src+idx;
+    if(col_diff == 2) {
 
-            pixel p = src[RIDX(ii, jj, dim)];
-            red_acc += p.red;
-            green_acc += p.green;
-            blue_acc += p.blue;
-            count++;
+        for(ii = min_row_idx; ii <= max_row_idx; ii++) {
+
+            red_acc += p->red;
+            green_acc += p->green;
+            blue_acc += p->blue;
+            
+            p++;
+            red_acc += p->red;
+            green_acc += p->green;
+            blue_acc += p->blue;
+
+            p++;
+            red_acc += p->red;
+            green_acc += p->green;
+            blue_acc += p->blue;
+
+            p += dim-2;
+            count+=3;
         }
+    } else {
+
+        for(ii = min_row_idx; ii <= max_row_idx; ii++) {
+
+            red_acc += p->red;
+            green_acc += p->green;
+            blue_acc += p->blue;
+            
+            p++;
+            red_acc += p->red;
+            green_acc += p->green;
+            blue_acc += p->blue;
+
+            p += dim-1;
+            count+=2;
+        }
+    }
 
     current_pixel.red = (unsigned short) (red_acc/count);
     current_pixel.green = (unsigned short) (green_acc/count);
