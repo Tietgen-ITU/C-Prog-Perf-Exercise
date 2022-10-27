@@ -27,11 +27,168 @@ team_t team = {
  * Your different versions of the rotate kernel go here
  ******************************************************/
 
+char rotate_another_one_descr[] = "rotate_another_one: here we try to change such that the outer loop is shortend";
+void rotate_antoher_one(int dim, pixel *src, pixel *dst) 
+{
+    int i, j, si, ni, si_start;
+    int bucket_size = 32; 
+    int max = dim*dim;
+    si_start = dim - 1; // Start at the end of first row
+    si = si_start; // This is the index that is flipped 90 degrees
+    ni = 0;
+
+    for (i = 0; i < dim; i++) {
+
+    	for (j = 0; j < dim; j+= bucket_size) {
+
+	        dst[ni] = src[si];
+            ni++; // Increment horizontally, left -> right
+            si += dim; // Increment vertically, bottom -> top
+
+	        dst[ni] = src[si];
+            ni++;
+            si += dim;
+            
+	        dst[ni] = src[si];
+            ni++;
+            si += dim;
+
+	        dst[ni] = src[si];
+            ni++;
+            si += dim;
+
+	        dst[ni] = src[si];
+            ni++;
+            si += dim;
+
+	        dst[ni] = src[si];
+            ni++;
+            si += dim;
+
+	        dst[ni] = src[si];
+            ni++;
+            si += dim;
+
+	        dst[ni] = src[si];
+            ni++;
+            si += dim;
+
+	        dst[ni] = src[si];
+            ni++;
+            si += dim;
+
+	        dst[ni] = src[si];
+            ni++;
+            si += dim;
+
+	        dst[ni] = src[si];
+            ni++;
+            si += dim;
+
+	        dst[ni] = src[si];
+            ni++;
+            si += dim;
+
+	        dst[ni] = src[si];
+            ni++;
+            si += dim;
+
+	        dst[ni] = src[si];
+            ni++;
+            si += dim;
+
+	        dst[ni] = src[si];
+            ni++;
+            si += dim;
+
+	        dst[ni] = src[si];
+            ni++;
+            si += dim;
+
+	        dst[ni] = src[si];
+            ni++;
+            si += dim;
+
+	        dst[ni] = src[si];
+            ni++;
+            si += dim;
+
+	        dst[ni] = src[si];
+            ni++;
+            si += dim;
+
+	        dst[ni] = src[si];
+            ni++;
+            si += dim;
+
+	        dst[ni] = src[si];
+            ni++;
+            si += dim;
+            
+	        dst[ni] = src[si];
+            ni++;
+            si += dim;
+
+	        dst[ni] = src[si];
+            ni++;
+            si += dim;
+
+	        dst[ni] = src[si];
+            ni++;
+            si += dim;
+
+	        dst[ni] = src[si];
+            ni++;
+            si += dim;
+
+	        dst[ni] = src[si];
+            ni++;
+            si += dim;
+
+	        dst[ni] = src[si];
+            ni++;
+            si += dim;
+
+	        dst[ni] = src[si];
+            ni++;
+            si += dim;
+
+	        dst[ni] = src[si];
+            ni++;
+            si += dim;
+
+	        dst[ni] = src[si];
+            ni++;
+            si += dim;
+            
+	        dst[ni] = src[si];
+            ni++;
+            si += dim;
+
+	        dst[ni] = src[si];
+            ni++;
+            si += dim;
+        }
+
+        /*
+        Now it is done with the inner loop. 
+        Then we have to reset the si value such that we can continue.
+        */
+
+        // Here we try to do it in parts to gain pipeline parallelism
+        si -= max;
+        si--;
+    }
+}
 
 /* 
  * basic_rotate: This is the first try of an implementation.
  * The idea here was to move the common computations out of the loop, use loop unrolling, and
- * memory aliasing. Sadly this does not seem to provide any performance compared to the 
+ * memory aliasing.
+ * Also i wanted to get rid of as many multiplication operations since they are "heavier" than
+ * add or bit shifting.
+ * 
+ * Sadly this does not seem to provide any performance compared to the 
  * naive solution.
  */
 char basic_rotate_descr[] = "basic_rotate: using basic optimizations to improve performance";
@@ -211,7 +368,7 @@ void naive_rotate(int dim, pixel *src, pixel *dst)
 char rotate_descr[] = "rotate: Current working version";
 void rotate(int dim, pixel *src, pixel *dst) 
 {
-    basic_rotate(dim, src, dst);
+    rotate_antoher_one(dim, src, dst);
 }
 
 /*********************************************************************
@@ -225,6 +382,7 @@ void rotate(int dim, pixel *src, pixel *dst)
 void register_rotate_functions() 
 {
     // add_rotate_function(&basic_rotate, basic_rotate_descr);
+    add_rotate_function(&rotate_antoher_one, rotate_another_one_descr);
     add_rotate_function(&naive_rotate, naive_rotate_descr);   
     add_rotate_function(&rotate, rotate_descr);   
     /* ... Register additional test functions here */
