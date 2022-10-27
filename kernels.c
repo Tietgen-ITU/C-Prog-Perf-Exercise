@@ -383,6 +383,7 @@ void register_rotate_functions()
 {
     // add_rotate_function(&basic_rotate, basic_rotate_descr);
     add_rotate_function(&rotate_antoher_one, rotate_another_one_descr);
+    add_rotate_function(&basic_rotate, basic_rotate_descr);
     add_rotate_function(&naive_rotate, naive_rotate_descr);   
     add_rotate_function(&rotate, rotate_descr);   
     /* ... Register additional test functions here */
