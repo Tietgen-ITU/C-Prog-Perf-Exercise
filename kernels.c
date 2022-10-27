@@ -29,156 +29,166 @@ team_t team = {
 
 
 /* 
- * naive_rotate - The naive baseline version of rotate 
+ * basic_rotate: This is the first try of an implementation.
+ * The idea here was to move the common computations out of the loop, use loop unrolling, and
+ * memory aliasing. Sadly this does not seem to provide any performance compared to the 
+ * naive solution.
  */
 char basic_rotate_descr[] = "basic_rotate: using basic optimizations to improve performance";
 void basic_rotate(int dim, pixel *src, pixel *dst) 
 {
     int i, j;
     int bucket_size = 32; // TODO: IS this the correct bucket size that we use in the code?
-    int ni = bucket_size - 1;
-    int si = 0; // This is the index that is flipped 90 degrees
+    int max_index = dim * dim;
+    int si_start = max_index;
+    max_index--;
+    int ni = 0;
+    int si = si_start; // This is the index that is flipped 90 degrees
 
-    for (i = 0; i < dim; i += 32) {
+    for (i = 0; i < dim; i++) {
 
-    	for (j = 0; j < dim; j++) {
+    	for (j = 0; j < dim; j += bucket_size) {
 
             // int strange_idx = (dim-1-j)*i+dim;
             // int normal_idx = i*j+dim;
 
-	        dst[si] = src[ni];
-            ni--;
-            si += bucket_size;
+            si -= dim;
 
 	        dst[si] = src[ni];
-            ni--;
-            si += bucket_size;
+            ni++;
+            si -= dim;
+
+	        dst[si] = src[ni];
+            ni++;
+            si -= dim;
             
 	        dst[si] = src[ni];
-            ni--;
-            si += bucket_size;
+            ni++;
+            si -= dim;
 
 	        dst[si] = src[ni];
-            ni--;
-            si += bucket_size;
+            ni++;
+            si -= dim;
 
 	        dst[si] = src[ni];
-            ni--;
-            si += bucket_size;
+            ni++;
+            si -= dim;
 
 	        dst[si] = src[ni];
-            ni--;
-            si += bucket_size;
+            ni++;
+            si -= dim;
 
 	        dst[si] = src[ni];
-            ni--;
-            si += bucket_size;
+            ni++;
+            si -= dim;
 
 	        dst[si] = src[ni];
-            ni--;
-            si += bucket_size;
+            ni++;
+            si -= dim;
 
 	        dst[si] = src[ni];
-            ni--;
-            si += bucket_size;
+            ni++;
+            si -= dim;
 
 	        dst[si] = src[ni];
-            ni--;
-            si += bucket_size;
+            ni++;
+            si -= dim;
 
 	        dst[si] = src[ni];
-            ni--;
-            si += bucket_size;
+            ni++;
+            si -= dim;
 
 	        dst[si] = src[ni];
-            ni--;
-            si += bucket_size;
+            ni++;
+            si -= dim;
 
 	        dst[si] = src[ni];
-            ni--;
-            si += bucket_size;
+            ni++;
+            si -= dim;
 
 	        dst[si] = src[ni];
-            ni--;
-            si += bucket_size;
+            ni++;
+            si -= dim;
 
 	        dst[si] = src[ni];
-            ni--;
-            si += bucket_size;
+            ni++;
+            si -= dim;
 
 	        dst[si] = src[ni];
-            ni--;
-            si += bucket_size;
+            ni++;
+            si -= dim;
 
 	        dst[si] = src[ni];
-            ni--;
-            si += bucket_size;
+            ni++;
+            si -= dim;
 
 	        dst[si] = src[ni];
-            ni--;
-            si += bucket_size;
+            ni++;
+            si -= dim;
 
 	        dst[si] = src[ni];
-            ni--;
-            si += bucket_size;
+            ni++;
+            si -= dim;
 
 	        dst[si] = src[ni];
-            ni--;
-            si += bucket_size;
+            ni++;
+            si -= dim;
 
 	        dst[si] = src[ni];
-            ni--;
-            si += bucket_size;
+            ni++;
+            si -= dim;
             
 	        dst[si] = src[ni];
-            ni--;
-            si += bucket_size;
+            ni++;
+            si -= dim;
 
 	        dst[si] = src[ni];
-            ni--;
-            si += bucket_size;
+            ni++;
+            si -= dim;
 
 	        dst[si] = src[ni];
-            ni--;
-            si += bucket_size;
+            ni++;
+            si -= dim;
 
 	        dst[si] = src[ni];
-            ni--;
-            si += bucket_size;
+            ni++;
+            si -= dim;
 
 	        dst[si] = src[ni];
-            ni--;
-            si += bucket_size;
+            ni++;
+            si -= dim;
 
 	        dst[si] = src[ni];
-            ni--;
-            si += bucket_size;
+            ni++;
+            si -= dim;
 
 	        dst[si] = src[ni];
-            ni--;
-            si += bucket_size;
+            ni++;
+            si -= dim;
 
 	        dst[si] = src[ni];
-            ni--;
-            si += bucket_size;
+            ni++;
+            si -= dim;
 
 	        dst[si] = src[ni];
-            ni--;
-            si += bucket_size;
+            ni++;
+            si -= dim;
             
 	        dst[si] = src[ni];
-            ni--;
-            si += bucket_size;
+            ni++;
+            si -= dim;
 
 	        dst[si] = src[ni];
-            // ni--;
-            // si += bucket_size;
-
-            // Reset values for next iteration
-            ni += 64; // Set to next end
-            si -= 992; // Set to the beginning again
-            si++;
+            ni++;
+            //si -= dim;
         }
+
+        /*
+        Now it is done with the inner loop. 
+        Then we have to reset the si value such that we can continue.
+        */
+        si += si_start;
+        si++;
     }
 }
 /* 
