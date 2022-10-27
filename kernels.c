@@ -480,6 +480,34 @@ void naive_smooth(int dim, pixel *src, pixel *dst)
 	        dst[RIDX(i, j, dim)] = avg(dim, i, j, src);
 }
 
+
+/* 
+ * avg - Returns averaged pixel value at (i,j) 
+ */
+static pixel avg_basic(int dim, int i, int j, pixel *src) 
+{
+    int ii, jj, red_acc = 0, green_acc = 0, blue_acc = 0, count = 0;
+    pixel current_pixel;
+
+    int min_row_idx = min(i+1, dim-1);
+    int min_col_idx = min(j+1, dim-1);
+
+    for(ii = max(i-1, 0); ii <= min_row_idx; ii++) 
+	    for(jj = max(j-1, 0); jj <= min_col_idx; jj++) {
+
+            pixel p = src[RIDX(ii, jj, dim)];
+            red_acc += p.red;
+            green_acc += p.green;
+            blue_acc += p.blue;
+            count++;
+        }
+
+    current_pixel.red = (unsigned short) (red_acc/count);
+    current_pixel.green = (unsigned short) (green_acc/count);
+    current_pixel.blue = (unsigned short) (blue_acc/count);
+    return current_pixel;
+}
+
 /*
 * basic smooth - ...
 */
@@ -501,54 +529,37 @@ void basic_smooth(int dim, pixel *src, pixel *dst) {
 /* 
  * initialize_pixel_sum - Initializes all fields of sum to 0 
  */
-static void initialize_pixel_sum_basic(pixel_sum *sum) 
-{
-    sum->red = sum->green = sum->blue = 0;
-    sum->num = 0;
-    return;
-}
+// static void initialize_pixel_sum_basic(pixel_sum *sum) 
+// {
+//     sum->red = sum->green = sum->blue = 0;
+//     sum->num = 0;
+//     return;
+// }
 
 /* 
  * accumulate_sum - Accumulates field values of p in corresponding 
  * fields of sum 
  */
-static void accumulate_sum_basic(pixel_sum *sum, pixel p) 
-{
-    sum->red += (int) p.red;
-    sum->green += (int) p.green;
-    sum->blue += (int) p.blue;
-    sum->num++;
-    return;
-}
+// static void accumulate_sum_basic(pixel_sum *sum, pixel p) 
+// {
+//     sum->red += (int) p.red;
+//     sum->green += (int) p.green;
+//     sum->blue += (int) p.blue;
+//     sum->num++;
+//     return;
+// }
 
 /* 
  * assign_sum_to_pixel - Computes averaged pixel value in current_pixel 
  */
-static void assign_sum_to_pixel_basic(pixel *current_pixel, pixel_sum sum) 
-{
-    current_pixel->red = (unsigned short) (sum.red/sum.num);
-    current_pixel->green = (unsigned short) (sum.green/sum.num);
-    current_pixel->blue = (unsigned short) (sum.blue/sum.num);
-    return;
-}
+// static void assign_sum_to_pixel_basic(pixel *current_pixel, pixel_sum sum) 
+// {
+//     current_pixel->red = (unsigned short) (sum.red/sum.num);
+//     current_pixel->green = (unsigned short) (sum.green/sum.num);
+//     current_pixel->blue = (unsigned short) (sum.blue/sum.num);
+//     return;
+// }
 
-/* 
- * avg - Returns averaged pixel value at (i,j) 
- */
-static pixel avg_basic(int dim, int i, int j, pixel *src) 
-{
-    int ii, jj;
-    pixel_sum sum;
-    pixel current_pixel;
-
-    initialize_pixel_sum_basic(&sum);
-    for(ii = max(i-1, 0); ii <= min(i+1, dim-1); ii++) 
-	    for(jj = max(j-1, 0); jj <= min(j+1, dim-1); jj++) 
-	        accumulate_sum_basic(&sum, src[RIDX(ii, jj, dim)]);
-
-    assign_sum_to_pixel_basic(&current_pixel, sum);
-    return current_pixel;
-}
 /*
  * smooth - Your current working version of smooth. 
  * IMPORTANT: This is the version you will be graded on
