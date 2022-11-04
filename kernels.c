@@ -37,6 +37,10 @@ void rotate_antoher_one(int dim, pixel *src, pixel *dst)
     si = si_start; // This is the index that is flipped 90 degrees
     ni = 0;
 
+    // TODO: Get rid of the inner loop
+
+    // TODO: Get rid of the unecessary variables
+
     for (i = 0; i < dim; i++) {
 
     	for (j = 0; j < dim; j+= bucket_size) {
@@ -550,6 +554,12 @@ char basic_smooth_descr[] = "basic_smooth: This is my first approach to a smooth
 void basic_smooth(int dim, pixel *src, pixel *dst) {
 
     int i, j;
+
+    // TODO: Go through corners first
+
+    // TODO: Go through sides
+
+    // TODO: Iterate through the middle
 
 
     for (i = 0; i < dim; i++) {
