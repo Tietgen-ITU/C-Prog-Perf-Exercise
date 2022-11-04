@@ -561,40 +561,6 @@ void basic_smooth(int dim, pixel *src, pixel *dst) {
     }
 }
 
-/* 
- * initialize_pixel_sum - Initializes all fields of sum to 0 
- */
-// static void initialize_pixel_sum_basic(pixel_sum *sum) 
-// {
-//     sum->red = sum->green = sum->blue = 0;
-//     sum->num = 0;
-//     return;
-// }
-
-/* 
- * accumulate_sum - Accumulates field values of p in corresponding 
- * fields of sum 
- */
-// static void accumulate_sum_basic(pixel_sum *sum, pixel p) 
-// {
-//     sum->red += (int) p.red;
-//     sum->green += (int) p.green;
-//     sum->blue += (int) p.blue;
-//     sum->num++;
-//     return;
-// }
-
-/* 
- * assign_sum_to_pixel - Computes averaged pixel value in current_pixel 
- */
-// static void assign_sum_to_pixel_basic(pixel *current_pixel, pixel_sum sum) 
-// {
-//     current_pixel->red = (unsigned short) (sum.red/sum.num);
-//     current_pixel->green = (unsigned short) (sum.green/sum.num);
-//     current_pixel->blue = (unsigned short) (sum.blue/sum.num);
-//     return;
-// }
-
 /*
  * smooth - Your current working version of smooth. 
  * IMPORTANT: This is the version you will be graded on
