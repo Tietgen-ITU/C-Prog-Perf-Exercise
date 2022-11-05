@@ -547,6 +547,178 @@ static pixel avg_basic(int dim, int i, int j, pixel *src)
     return current_pixel;
 }
 
+void avg_corners_basic(int dim, int max, pixel *src, pixel *dst) {
+
+    int red_acc = 0, green_acc = 0, blue_acc = 0;
+    int max_row_index = dim - 1;
+    int before_max = dim - 2;
+    int count = 4;
+    pixel current_pixel;
+
+    // Corner 0,0
+    
+    int index = RIDX(0, 0, dim);
+    pixel *p = src+index;
+
+    red_acc += p->red;
+    green_acc += p->green;
+    blue_acc += p->blue;
+            
+    p++;
+    red_acc += p->red;
+    green_acc += p->green;
+    blue_acc += p->blue;
+
+    p += dim-1;
+
+    red_acc += p->red;
+    green_acc += p->green;
+    blue_acc += p->blue;
+            
+    p++;
+    red_acc += p->red;
+    green_acc += p->green;
+    blue_acc += p->blue;
+
+    current_pixel.red = (unsigned short) (red_acc/count);
+    current_pixel.green = (unsigned short) (green_acc/count);
+    current_pixel.blue = (unsigned short) (blue_acc/count);
+
+    dst[index] = current_pixel;
+
+    // Corner dim-1, 0
+    index = max_row_index;
+    p = src+before_max;
+
+    red_acc = 0;
+    green_acc = 0;
+    blue_acc = 0;
+
+    red_acc += p->red;
+    green_acc += p->green;
+    blue_acc += p->blue;
+            
+    p++;
+    red_acc += p->red;
+    green_acc += p->green;
+    blue_acc += p->blue;
+
+    p += dim-1;
+
+    red_acc += p->red;
+    green_acc += p->green;
+    blue_acc += p->blue;
+            
+    p++;
+    red_acc += p->red;
+    green_acc += p->green;
+    blue_acc += p->blue;
+
+    current_pixel.red = (unsigned short) (red_acc/count);
+    current_pixel.green = (unsigned short) (green_acc/count);
+    current_pixel.blue = (unsigned short) (blue_acc/count);
+
+    dst[index] = current_pixel;
+    index = (max-dim);
+    p = src+(index-dim);
+
+    red_acc = 0;
+    green_acc = 0;
+    blue_acc = 0;
+
+    red_acc += p->red;
+    green_acc += p->green;
+    blue_acc += p->blue;
+            
+    p++;
+    red_acc += p->red;
+    green_acc += p->green;
+    blue_acc += p->blue;
+
+    p += dim-1;
+
+    red_acc += p->red;
+    green_acc += p->green;
+    blue_acc += p->blue;
+            
+    p++;
+    red_acc += p->red;
+    green_acc += p->green;
+    blue_acc += p->blue;
+
+    current_pixel.red = (unsigned short) (red_acc/count);
+    current_pixel.green = (unsigned short) (green_acc/count);
+    current_pixel.blue = (unsigned short) (blue_acc/count);
+
+    dst[index] = current_pixel;
+
+    // Corner 0, dim-1
+    index = (max-dim);
+    p = src+(index-dim);
+
+    red_acc = 0;
+    green_acc = 0;
+    blue_acc = 0;
+
+    red_acc += p->red;
+    green_acc += p->green;
+    blue_acc += p->blue;
+            
+    p++;
+    red_acc += p->red;
+    green_acc += p->green;
+    blue_acc += p->blue;
+
+    p += dim-1;
+
+    red_acc += p->red;
+    green_acc += p->green;
+    blue_acc += p->blue;
+            
+    p++;
+    red_acc += p->red;
+    green_acc += p->green;
+    blue_acc += p->blue;
+
+    current_pixel.red = (unsigned short) (red_acc/count);
+    current_pixel.green = (unsigned short) (green_acc/count);
+    current_pixel.blue = (unsigned short) (blue_acc/count);
+
+    // Corner dim-1, dim-1
+    index = max-1;
+    p = src+((index-dim)-1);
+
+    red_acc = 0;
+    green_acc = 0;
+    blue_acc = 0;
+
+    red_acc += p->red;
+    green_acc += p->green;
+    blue_acc += p->blue;
+            
+    p++;
+    red_acc += p->red;
+    green_acc += p->green;
+    blue_acc += p->blue;
+
+    p += dim-1;
+
+    red_acc += p->red;
+    green_acc += p->green;
+    blue_acc += p->blue;
+            
+    p++;
+    red_acc += p->red;
+    green_acc += p->green;
+    blue_acc += p->blue;
+
+    current_pixel.red = (unsigned short) (red_acc/count);
+    current_pixel.green = (unsigned short) (green_acc/count);
+    current_pixel.blue = (unsigned short) (blue_acc/count);
+
+    dst[index] = current_pixel;
+}
+
 /*
 * basic smooth - ...
 */
@@ -554,8 +726,10 @@ char basic_smooth_descr[] = "basic_smooth: This is my first approach to a smooth
 void basic_smooth(int dim, pixel *src, pixel *dst) {
 
     int i, j;
+    int max = dim * dim;
 
     // TODO: Go through corners first
+    avg_corners_basic(dim, max, src, dst);
 
     // TODO: Go through sides
 
