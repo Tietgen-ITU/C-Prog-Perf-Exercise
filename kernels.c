@@ -547,6 +547,9 @@ static pixel avg_basic(int dim, int i, int j, pixel *src)
     return current_pixel;
 }
 
+/*
+* Calculates the average of the corners of the picture
+*/
 void avg_corners_basic(int dim, int max, pixel *src, pixel *dst) {
 
     int red_acc = 0, green_acc = 0, blue_acc = 0;
