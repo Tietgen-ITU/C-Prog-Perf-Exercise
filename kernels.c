@@ -722,6 +722,208 @@ void avg_corners_basic(int dim, int max, pixel *src, pixel *dst) {
     dst[index] = current_pixel;
 }
 
+void avg_sides_basic(int dim, int max, pixel *src, pixel *dst) {
+
+    int max_row_index = dim - 1; 
+    int left_red_acc = 0, left_green_acc = 0, left_blue_acc = 0;
+    int right_red_acc = 0, right_green_acc = 0, right_blue_acc = 0;
+    int top_red_acc = 0, top_green_acc = 0, top_blue_acc = 0;
+    int bottom_red_acc = 0, bottom_green_acc = 0, bottom_blue_acc = 0;
+    int count = 6;
+    pixel current_left;
+    pixel current_right;
+    pixel current_top;
+    pixel current_bottom;
+
+    // TODO: Go through both sides
+    int right_start_index = max_row_index + dim;
+    int top_start_index = 1;
+    int bottom_start_index = max - max_row_index;
+    int left_start_index = dim+1;
+    pixel *left = src+0;
+    pixel *right = src+max_row_index;
+    pixel *top = src+0;
+    pixel *bottom = src+(max-dim);
+
+    for(int i = 1; i < dim; i++) {
+
+        
+        left_red_acc = 0;
+        left_green_acc = 0;
+        left_blue_acc = 0;
+
+        left_red_acc += left->red;
+        left_green_acc += left->green;
+        left_blue_acc += left->blue;
+            
+        left++;
+        left_red_acc += left->red;
+        left_green_acc += left->green;
+        left_blue_acc += left->blue;
+
+        left += max_row_index;
+
+        left_red_acc += left->red;
+        left_green_acc += left->green;
+        left_blue_acc += left->blue;
+            
+        left++;
+        left_red_acc += left->red;
+        left_green_acc += left->green;
+        left_blue_acc += left->blue;
+
+        left += max_row_index;
+
+        left_red_acc += left->red;
+        left_green_acc += left->green;
+        left_blue_acc += left->blue;
+            
+        left++;
+        left_red_acc += left->red;
+        left_green_acc += left->green;
+        left_blue_acc += left->blue;
+        
+        current_left.red = (unsigned short) (left_red_acc/count);
+        current_left.green = (unsigned short) (left_green_acc/count);
+        current_left.blue = (unsigned short) (left_blue_acc/count);
+
+        right_red_acc = 0;
+        right_green_acc = 0;
+        right_blue_acc = 0;
+
+        right_red_acc += right->red;
+        right_green_acc += right->green;
+        right_blue_acc += right->blue;
+            
+        right++;
+        right_red_acc += right->red;
+        right_green_acc += right->green;
+        right_blue_acc += right->blue;
+
+        right += max_row_index;
+
+        right_red_acc += right->red;
+        right_green_acc += right->green;
+        right_blue_acc += right->blue;
+            
+        right++;
+        right_red_acc += right->red;
+        right_green_acc += right->green;
+        right_blue_acc += right->blue;
+
+        right += max_row_index;
+
+        right_red_acc += right->red;
+        right_green_acc += right->green;
+        right_blue_acc += right->blue;
+            
+        right++;
+        right_red_acc += right->red;
+        right_green_acc += right->green;
+        right_blue_acc += right->blue;
+        
+        current_right.red = (unsigned short) (right_red_acc/count);
+        current_right.green = (unsigned short) (right_green_acc/count);
+        current_right.blue = (unsigned short) (right_blue_acc/count);
+
+        // Store value
+        dst[left_start_index] = current_left;
+        dst[right_start_index] = current_right;
+        left = src+left_start_index;
+        right = src+(right_start_index+1);
+        left_start_index += dim;
+        right_start_index += dim;
+    }
+
+    // TODO: Go through both lengths
+    for(int i = 1; i < dim; i++) {
+
+        top_red_acc = 0;
+        top_green_acc = 0;
+        top_blue_acc = 0;
+
+        top_red_acc += top->red;
+        top_green_acc += top->green;
+        top_blue_acc += top->blue;
+            
+        top++;
+        top_red_acc += top->red;
+        top_green_acc += top->green;
+        top_blue_acc += top->blue;
+
+        top++;
+        top_red_acc += top->red;
+        top_green_acc += top->green;
+        top_blue_acc += top->blue;
+
+        top += max_row_index;
+
+        top_red_acc += top->red;
+        top_green_acc += top->green;
+        top_blue_acc += top->blue;
+            
+        top++;
+        top_red_acc += top->red;
+        top_green_acc += top->green;
+        top_blue_acc += top->blue;
+
+        top++;
+        top_red_acc += top->red;
+        top_green_acc += top->green;
+        top_blue_acc += top->blue;
+            
+        current_top.red = (unsigned short) (top_red_acc/count);
+        current_top.green = (unsigned short) (top_green_acc/count);
+        current_top.blue = (unsigned short) (top_blue_acc/count);
+
+        // Bottom        
+        bottom_red_acc = 0;
+        bottom_green_acc = 0;
+        bottom_blue_acc = 0;
+
+        bottom_red_acc += bottom->red;
+        bottom_green_acc += bottom->green;
+        bottom_blue_acc += bottom->blue;
+            
+        bottom++;
+        bottom_red_acc += bottom->red;
+        bottom_green_acc += bottom->green;
+        bottom_blue_acc += bottom->blue;
+
+        bottom++;
+        bottom_red_acc += bottom->red;
+        bottom_green_acc += bottom->green;
+        bottom_blue_acc += bottom->blue;
+
+        bottom += max_row_index;
+
+        bottom_red_acc += bottom->red;
+        bottom_green_acc += bottom->green;
+        bottom_blue_acc += bottom->blue;
+            
+        bottom++;
+        bottom_red_acc += bottom->red;
+        bottom_green_acc += bottom->green;
+        bottom_blue_acc += bottom->blue;
+
+        bottom++;
+        bottom_red_acc += bottom->red;
+        bottom_green_acc += bottom->green;
+        bottom_blue_acc += bottom->blue;
+            
+        current_bottom.red = (unsigned short) (bottom_red_acc/count);
+        current_bottom.green = (unsigned short) (bottom_green_acc/count);
+        current_bottom.blue = (unsigned short) (bottom_blue_acc/count);
+
+        // Store value
+        dst[top_start_index] = current_top;
+        dst[bottom_start_index] = current_bottom;
+        top = src+(top_start_index + dim);
+        bottom = src+(bottom_start_index-dim);
+        top_start_index++;
+        bottom_start_index++;
+    }
+}
 /*
 * basic smooth - ...
 */
@@ -735,7 +937,7 @@ void basic_smooth(int dim, pixel *src, pixel *dst) {
     avg_corners_basic(dim, max, src, dst);
 
     // TODO: Go through sides
-
+    avg_sides_basic(dim, max, src, dst);
     // TODO: Iterate through the middle
 
 
