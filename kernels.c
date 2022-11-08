@@ -488,69 +488,69 @@ void naive_smooth(int dim, pixel *src, pixel *dst)
 /* 
  * avg - Returns averaged pixel value at (i,j) 
  */
-static pixel avg_basic(int dim, int i, int j, pixel *src) 
-{
-    int ii, red_acc = 0, green_acc = 0, blue_acc = 0, count = 0;
-    pixel current_pixel;
+// static pixel avg_basic(int dim, int i, int j, pixel *src) 
+// {
+//     int ii, red_acc = 0, green_acc = 0, blue_acc = 0, count = 0;
+//     pixel current_pixel;
 
-    int max_row_idx = min(i+1, dim-1);
-    int max_col_idx = min(j+1, dim-1);
-    int min_row_idx = max(i-1, 0);
-    int min_col_idx = max(j-1, 0); 
-    // int row_diff = max_row_idx - min_row_idx;
-    int col_diff = max_col_idx - min_col_idx;
+//     int max_row_idx = min(i+1, dim-1);
+//     int max_col_idx = min(j+1, dim-1);
+//     int min_row_idx = max(i-1, 0);
+//     int min_col_idx = max(j-1, 0); 
+//     // int row_diff = max_row_idx - min_row_idx;
+//     int col_diff = max_col_idx - min_col_idx;
 
-    int idx = RIDX(min_row_idx, min_col_idx, dim);
-    pixel *p = src+idx;
-    if(col_diff == 2) {
+//     int idx = RIDX(min_row_idx, min_col_idx, dim);
+//     pixel *p = src+idx;
+//     if(col_diff == 2) {
 
-        for(ii = min_row_idx; ii <= max_row_idx; ii++) {
+//         for(ii = min_row_idx; ii <= max_row_idx; ii++) {
 
-            red_acc += p->red;
-            green_acc += p->green;
-            blue_acc += p->blue;
+//             red_acc += p->red;
+//             green_acc += p->green;
+//             blue_acc += p->blue;
             
-            p++;
-            red_acc += p->red;
-            green_acc += p->green;
-            blue_acc += p->blue;
+//             p++;
+//             red_acc += p->red;
+//             green_acc += p->green;
+//             blue_acc += p->blue;
 
-            p++;
-            red_acc += p->red;
-            green_acc += p->green;
-            blue_acc += p->blue;
+//             p++;
+//             red_acc += p->red;
+//             green_acc += p->green;
+//             blue_acc += p->blue;
 
-            p += dim-2;
-            count+=3;
-        }
-    } else {
+//             p += dim-2;
+//             count+=3;
+//         }
+//     } else {
 
-        for(ii = min_row_idx; ii <= max_row_idx; ii++) {
+//         for(ii = min_row_idx; ii <= max_row_idx; ii++) {
 
-            red_acc += p->red;
-            green_acc += p->green;
-            blue_acc += p->blue;
+//             red_acc += p->red;
+//             green_acc += p->green;
+//             blue_acc += p->blue;
             
-            p++;
-            red_acc += p->red;
-            green_acc += p->green;
-            blue_acc += p->blue;
+//             p++;
+//             red_acc += p->red;
+//             green_acc += p->green;
+//             blue_acc += p->blue;
 
-            p += dim-1;
-            count+=2;
-        }
-    }
+//             p += dim-1;
+//             count+=2;
+//         }
+//     }
 
-    current_pixel.red = (unsigned short) (red_acc/count);
-    current_pixel.green = (unsigned short) (green_acc/count);
-    current_pixel.blue = (unsigned short) (blue_acc/count);
-    return current_pixel;
-}
+//     current_pixel.red = (unsigned short) (red_acc/count);
+//     current_pixel.green = (unsigned short) (green_acc/count);
+//     current_pixel.blue = (unsigned short) (blue_acc/count);
+//     return current_pixel;
+// }
 
 /*
 * Calculates the average of the corners of the picture
 */
-void avg_corners_basic(int dim, int max, pixel *src, pixel *dst) {
+static void avg_corners_basic(int dim, int max, pixel *src, pixel *dst) {
 
     int red_acc = 0, green_acc = 0, blue_acc = 0;
     int max_row_index = dim - 1;
@@ -722,7 +722,7 @@ void avg_corners_basic(int dim, int max, pixel *src, pixel *dst) {
     dst[index] = current_pixel;
 }
 
-void avg_sides_basic(int dim, int max, pixel *src, pixel *dst) {
+static void avg_sides_basic(int dim, int max, pixel *src, pixel *dst) {
 
     int max_row_index = dim - 1; 
     int left_red_acc = 0, left_green_acc = 0, left_blue_acc = 0;
@@ -735,7 +735,7 @@ void avg_sides_basic(int dim, int max, pixel *src, pixel *dst) {
     pixel current_top;
     pixel current_bottom;
 
-    // TODO: Go through both sides
+    // Go through both sides
     int right_start_index = max_row_index + dim;
     int top_start_index = 1;
     int bottom_start_index = max - max_row_index;
@@ -744,10 +744,10 @@ void avg_sides_basic(int dim, int max, pixel *src, pixel *dst) {
     pixel *right = src+max_row_index;
     pixel *top = src+0;
     pixel *bottom = src+(max-dim);
+    pixel *bottom_next = src+(max+dim);
 
     for(int i = 1; i < dim; i++) {
 
-        
         left_red_acc = 0;
         left_green_acc = 0;
         left_blue_acc = 0;
@@ -835,7 +835,7 @@ void avg_sides_basic(int dim, int max, pixel *src, pixel *dst) {
         right_start_index += dim;
     }
 
-    // TODO: Go through both lengths
+    // Go through both lengths
     for(int i = 1; i < dim; i++) {
 
         top_red_acc = 0;
@@ -881,6 +881,9 @@ void avg_sides_basic(int dim, int max, pixel *src, pixel *dst) {
         bottom_green_acc = 0;
         bottom_blue_acc = 0;
 
+        bottom = bottom_next;
+        bottom_next++;
+
         bottom_red_acc += bottom->red;
         bottom_green_acc += bottom->green;
         bottom_blue_acc += bottom->blue;
@@ -924,13 +927,93 @@ void avg_sides_basic(int dim, int max, pixel *src, pixel *dst) {
         bottom_start_index++;
     }
 }
+
+static void avg_middle_basic(int dim, int max, pixel *src, pixel *dst) {
+
+    int red_acc = 0, green_acc = 0, blue_acc = 0, count = 9;
+    int index = 1;
+    int range = dim-2;
+    pixel *next = src+0;
+    pixel *current;
+    pixel current_pixel;
+
+    for(int i = 0; i < range; i++) {
+
+        for(int j = 0; i < range; j++) {
+
+            current = next;
+            next++;
+
+            red_acc = 0;
+            green_acc = 0;
+            blue_acc = 0;
+
+            red_acc += current->red;
+            green_acc += current->green;
+            blue_acc += current->blue;
+            
+            current++;
+            red_acc += current->red;
+            green_acc += current->green;
+            blue_acc += current->blue;
+
+            current++;
+            red_acc += current->red;
+            green_acc += current->green;
+            blue_acc += current->blue;
+            
+            current += dim-2;
+
+            red_acc += current->red;
+            green_acc += current->green;
+            blue_acc += current->blue;
+            
+            current++;
+            red_acc += current->red;
+            green_acc += current->green;
+            blue_acc += current->blue;
+
+            current++;
+            red_acc += current->red;
+            green_acc += current->green;
+            blue_acc += current->blue;
+            
+            current += dim-2;
+
+            red_acc += current->red;
+            green_acc += current->green;
+            blue_acc += current->blue;
+            
+            current++;
+            red_acc += current->red;
+            green_acc += current->green;
+            blue_acc += current->blue;
+
+            current++;
+            red_acc += current->red;
+            green_acc += current->green;
+            blue_acc += current->blue;
+            
+            current_pixel.red = (unsigned short) (red_acc/count);
+            current_pixel.green = (unsigned short) (green_acc/count);
+            current_pixel.blue = (unsigned short) (blue_acc/count);
+
+            dst[index] = current_pixel;
+            index++;
+        }
+
+        index += 2;
+        next++;
+    }
+}
+
 /*
 * basic smooth - ...
 */
 char basic_smooth_descr[] = "basic_smooth: This is my first approach to a smooth implementation";
 void basic_smooth(int dim, pixel *src, pixel *dst) {
 
-    int i, j;
+    // int i, j;
     int max = dim * dim;
 
     // TODO: Go through corners first
@@ -939,15 +1022,8 @@ void basic_smooth(int dim, pixel *src, pixel *dst) {
     // TODO: Go through sides
     avg_sides_basic(dim, max, src, dst);
     // TODO: Iterate through the middle
+    avg_middle_basic(dim, max, src, dst);
 
-
-    for (i = 0; i < dim; i++) {
-
-	    for (j = 0; j < dim; j++) {
-
-            dst[RIDX(i, j, dim)] = avg_basic(dim, i, j, src);
-        }
-    }
 }
 
 /*
