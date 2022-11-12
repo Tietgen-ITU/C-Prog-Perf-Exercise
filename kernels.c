@@ -348,6 +348,7 @@ void basic_rotate(int dim, pixel *src, pixel *dst)
         si++;
     }
 }
+
 /* 
  * naive_rotate - The naive baseline version of rotate 
  */
@@ -381,9 +382,8 @@ void rotate(int dim, pixel *src, pixel *dst)
 
 void register_rotate_functions() 
 {
-    // add_rotate_function(&basic_rotate, basic_rotate_descr);
     add_rotate_function(&rotate_antoher_one, rotate_another_one_descr);
-    add_rotate_function(&basic_rotate, basic_rotate_descr);
+    // add_rotate_function(&basic_rotate, basic_rotate_descr);
     add_rotate_function(&naive_rotate, naive_rotate_descr);   
     add_rotate_function(&rotate, rotate_descr);   
     /* ... Register additional test functions here */
@@ -483,23 +483,29 @@ void naive_smooth(int dim, pixel *src, pixel *dst)
 
 /* 
  * avg - Returns averaged pixel value at (i,j) 
+ * Here I try to take advantage that we atleast have 2 columns at a time and maximum 3.
+ * This can be used in order to perform loop unrolling and make the inner loop shorter with 
+ * loop unrolling. 
+ * 
+ * Also I have performed some code motion and am calculating some of the computations outside
+ * the loop.
  */
 static pixel avg_basic(int dim, int i, int j, pixel *src) 
 {
     int ii, red_acc = 0, green_acc = 0, blue_acc = 0, count = 0;
-    pixel current_pixel;
 
     int max_row_idx = min(i+1, dim-1);
     int max_col_idx = min(j+1, dim-1);
     int min_row_idx = max(i-1, 0);
     int min_col_idx = max(j-1, 0); 
-    // int row_diff = max_row_idx - min_row_idx;
-    int col_diff = max_col_idx - min_col_idx;
+    int column_diff = max_col_idx - min_col_idx;
 
     int idx = RIDX(min_row_idx, min_col_idx, dim);
     pixel *p = src+idx;
-    if(col_diff == 2) {
+    pixel current_pixel;
+    if(column_diff == 2) {
 
+        // Go through 3 columns at a tme
         for(ii = min_row_idx; ii <= max_row_idx; ii++) {
 
             red_acc += p->red;
@@ -521,6 +527,7 @@ static pixel avg_basic(int dim, int i, int j, pixel *src)
         }
     } else {
 
+        // Go through 2 columns at a time
         for(ii = min_row_idx; ii <= max_row_idx; ii++) {
 
             red_acc += p->red;
@@ -544,13 +551,12 @@ static pixel avg_basic(int dim, int i, int j, pixel *src)
 }
 
 /*
-* basic smooth - ...
+* basic smooth - Simpifies the avg_basic loop. 
 */
 char basic_smooth_descr[] = "basic_smooth: This is my first approach to a smooth implementation";
 void basic_smooth(int dim, pixel *src, pixel *dst) {
 
     int i, j;
-
 
     for (i = 0; i < dim; i++) {
 
@@ -560,40 +566,6 @@ void basic_smooth(int dim, pixel *src, pixel *dst) {
         }
     }
 }
-
-/* 
- * initialize_pixel_sum - Initializes all fields of sum to 0 
- */
-// static void initialize_pixel_sum_basic(pixel_sum *sum) 
-// {
-//     sum->red = sum->green = sum->blue = 0;
-//     sum->num = 0;
-//     return;
-// }
-
-/* 
- * accumulate_sum - Accumulates field values of p in corresponding 
- * fields of sum 
- */
-// static void accumulate_sum_basic(pixel_sum *sum, pixel p) 
-// {
-//     sum->red += (int) p.red;
-//     sum->green += (int) p.green;
-//     sum->blue += (int) p.blue;
-//     sum->num++;
-//     return;
-// }
-
-/* 
- * assign_sum_to_pixel - Computes averaged pixel value in current_pixel 
- */
-// static void assign_sum_to_pixel_basic(pixel *current_pixel, pixel_sum sum) 
-// {
-//     current_pixel->red = (unsigned short) (sum.red/sum.num);
-//     current_pixel->green = (unsigned short) (sum.green/sum.num);
-//     current_pixel->blue = (unsigned short) (sum.blue/sum.num);
-//     return;
-// }
 
 /*
  * smooth - Your current working version of smooth. 
